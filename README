@@ -1,0 +1,39 @@
+This document is in german language. Feel free to translate.
+
+
+Unter dem Markennamen "SolarMax" vertreibt die schweizer Firma 
+Sputnik Engineering AG Fotovoltaik-Wechselrichter.
+
+Die SolarMax-Wechselrichter lassen sich mit normaler Ethernet-Verbindung 
+abfragen und nutzen dabei ein (gewissermaßen) Text-basiertes Protokoll über
+eine TCP-Verbindung.
+
+Das verwendete Protokoll wurde von mir reverse engineered (mittels 
+Netzwerk-capturing bei Verwendung der MaxTalk-Software).
+
+Erst nach Implementierung der Basisfunktionalität erhielt ich doch
+noch eine Dokumentation des verwendeten Protokolls vom Hersteller.
+Die Lizenz dieser Schnittstellenbeschreibung erlaubt es jedoch nicht, 
+diese öffentlich zu machen:
+| Der Nutzer sieht davon ab, das Datenprotokoll Dritten 
+| gegenüber offenzulegen. Weiter sieht er davon ab, das 
+| MaxComm Datenprotokoll zur serienmässigen Herstellung 
+| von Datenvisualisierungs und –überwachungsgeräten sowie 
+| von Alarmierungsgeräten für Wechselrichteranlagen zu 
+| verwenden, welche die entsprechenden Standardlösungen 
+| des Lieferers konkurrenzieren. Erlaubt ist dagegen die 
+| Verwendung für die Herstellung von derartigen Geräten 
+| für den eigenen Gebrauch oder im Rahmen von massge-
+| schneiderten Datenkommunikations-System-Einzellösungen 
+| für bestimmte Kunden. Im Zweifelsfall ist Sputnik 
+| anzufragen.
+
+Kontaktdaten des Herstellers:
+  Sputnik Engineering AG
+  CH-Biel
+  www.solarmax.com
+
+
+
+Die hier vorliegende Python-Bibliothek basiert jedoch nicht auf dieser
+Schnittstellenbeschreibung und unterliegt daher nicht dieser Einschränkung.
