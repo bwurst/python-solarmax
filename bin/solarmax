@@ -13,21 +13,26 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-# Developed 2009-2010 by Bernd Wurst <bernd@schokokeks.org> 
+# Developed 2009-2010 by Bernd Wurst <bernd@schokokeks.org>
 # for own use.
 # Released to the public in 2012.
 
 
-import time, sys, os
+import time, sys, os, datetitme
 from solarmax import SolarMax
 
 from sqlite3 import dbapi2 as sqlite
 DB_FILE=sys.argv[1]
 
+ERROR_LOG=os.path.join(os.path.dirname(sys.argv[1]), 'error.log')
+
+# Zeitinterval in Sekunden
+# (in welchem zeitlichen Abstand werden die Werte von den WR ausgelesen)
+query_interval = 60
 inverters = { '192.168.0.201': [1,],
               '192.168.0.202': [2,],
-              '192.168.0.203': [3,],
-              '192.168.0.204': [4,],
+              '192.168.0.204': [3,4],
+#              '192.168.0.204': [4,],
             }
 
 
@@ -42,8 +47,14 @@ allinverters = []
 for host in inverters.keys():
   allinverters.extend(inverters[host])
 
+inverterstatus = {}
+for sm in smlist:
+  for (no, ivdata) in sm.inverters().items():
+    inverterstatus[no] = 'uninitialized'
+
 dbconn = sqlite.connect(DB_FILE)
 db = dbconn.cursor()
+
 
 while True:
   pac_gesamt = 0.0
@@ -51,13 +62,17 @@ while True:
 
   count = 0
   for sm in smlist:
-    for (no, ivdata) in sm.inverters().iteritems():
+    for (no, ivdata) in sm.inverters().items():
       try:
         (inverter, current) = sm.query(no, ['PAC', 'KDY', 'KT0', 'IDC', 'UDC', 'IL1', 'UL1', 'FDAT', 'SYS'])
         count += 1
       except:
         # Kommunikationsfehler, evtl. Wechselrichter aus
-        print 'Kommunikationsfehler, WR %i' % no
+        print('Kommunikationsfehler, WR {}'.format(no))
+        if inverterstatus[no] != 'offline':
+            with open(ERROR_LOG, 'a') as f:
+                f.write('%s: WR#%i: %s\n' % (datetime.datetime.now().isoformat(), no, 'offline'))
+            inverterstatus[no] = 'offline'
         continue
     
       ivmax = ivdata['installed']
@@ -66,9 +81,14 @@ while True:
       percent = int((PAC/ivmax) * 100)
       PDC = current['IDC'] * current['UDC']
       (status, errors) = sm.status(no)
-      if errors:
-        print 'WR %i: %s (%s)' % (no, status, errors)
-      
+      if inverterstatus[no] != status:
+        if inverterstatus[no] in ['Netzbetrieb', 'Betrieb auf MPP'] and status in ['Netzbetrieb', 'Betrieb auf MPP']:
+          pass
+        else:
+          inverterstatus[no] = status
+          print('WR {}: {} ({})'.format(no, status, errors))
+          with open(ERROR_LOG, 'a') as f:
+              f.write('%s: WR#%i: %s / errors: %s\n' % (datetime.datetime.now().isoformat(), no, status, errors))
 
       #print '''
       #WR %i (%s)
@@ -92,11 +112,11 @@ while True:
   except:
     pass
   if count < len(allinverters):
-    print 'Zu wenig Wechselrichter (%i < %i)' % (count, len(allinverters))
+    print('Zu wenig Wechselrichter (%i < %i)' % (count, len(allinverters)))
 
   #print '='*80
   #print 'GESAMT:  %9.2f Watt    / Heute: %8.1f kWh' % (pac_gesamt, daysum_gesamt)
-  time.sleep(10)
+  time.sleep(query_interval)
 
 
 

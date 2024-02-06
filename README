@@ -1,8 +1,17 @@
-This document is in german language. Feel free to translate.
+Dieser Code ist alt. Entwickelt 2009-2010 als eines meiner
+ersten Python-Projekte. Ich habe den Code 2022 auf Python 3
+portiert aber nicht wesentlich verändert. Meine Solarmax-
+Wechselrichter aus dem Jahr 2009 werden seither mit diesem
+Code überwacht.
+
+Eine Änderung an diesem Code ist nicht mehr geplant.
+Wer hier nicht unterstützte Geräte damit überwachen möchte,
+sollte das Repository forken.
 
 
-Unter dem Markennamen "SolarMax" vertreibt die schweizer Firma 
-Sputnik Engineering AG Fotovoltaik-Wechselrichter.
+Unter dem Markennamen "SolarMax" vertrieb die damalige schweizer Firma
+Sputnik Engineering AG Fotovoltaik-Wechselrichter. (Die Firma gibt es
+schon lange nicht mehr.)
 
 Die SolarMax-Wechselrichter lassen sich mit normaler Ethernet-Verbindung 
 abfragen und nutzen dabei ein (gewissermaßen) Text-basiertes Protokoll über
@@ -28,7 +37,7 @@ diese öffentlich zu machen:
 | für bestimmte Kunden. Im Zweifelsfall ist Sputnik 
 | anzufragen.
 
-Kontaktdaten des Herstellers:
+Kontaktdaten des Herstellers (damals):
   Sputnik Engineering AG
   CH-Biel
   www.solarmax.com
